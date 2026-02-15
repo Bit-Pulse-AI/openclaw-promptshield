@@ -1,0 +1,42 @@
+# Azure SDK
+azure-ai-contentsafety==1.0.0
+azure-identity==1.15.0
+azure-core==1.29.5
+azure-monitor-opentelemetry==1.2.0
+
+# Microsoft Graph (for Purview integration)
+msgraph-core==0.2.2
+msal==1.25.0
+
+# Web framework (for API/health checks)
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+
+# HTTP client
+requests==2.31.0
+httpx==0.26.0
+
+# Utilities
+python-dotenv==1.0.0
+pyyaml==6.0.1
+
+# Logging & Monitoring
+structlog==24.1.0
+python-json-logger==2.0.7
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+
+# Code quality
+black==24.1.1
+flake8==7.0.0
+mypy==1.8.0
+isort==5.13.2
+
+# Security scanning
+bandit==1.7.6
+safety==3.0.1

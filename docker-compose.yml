@@ -1,0 +1,136 @@
+version: '3.8'
+
+services:
+  openclaw-shield:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: openclaw-shield
+    
+    environment:
+      # Azure AI Content Safety
+      AZURE_CONTENT_SAFETY_ENDPOINT: ${AZURE_CONTENT_SAFETY_ENDPOINT}
+      AZURE_CONTENT_SAFETY_KEY: ${AZURE_CONTENT_SAFETY_KEY}
+      
+      # Microsoft Purview (Optional)
+      PURVIEW_TENANT_ID: ${PURVIEW_TENANT_ID:-}
+      PURVIEW_CLIENT_ID: ${PURVIEW_CLIENT_ID:-}
+      PURVIEW_CLIENT_SECRET: ${PURVIEW_CLIENT_SECRET:-}
+      PURVIEW_ENDPOINT: ${PURVIEW_ENDPOINT:-}
+      
+      # Azure Monitor / Application Insights
+      APPLICATIONINSIGHTS_CONNECTION_STRING: ${APPLICATIONINSIGHTS_CONNECTION_STRING:-}
+      
+      # Shield Configuration
+      SHIELD_MODE: ${SHIELD_MODE:-enforcing}  # or 'monitoring'
+      ALLOWED_BASH_COMMANDS: ${ALLOWED_BASH_COMMANDS:-ls,cat,grep,git,npm,pip,python,node}
+      SAFE_FILE_PATHS: ${SAFE_FILE_PATHS:-/home/claude/workspace,/tmp/openclaw-sandbox}
+      ALLOWED_DOMAINS: ${ALLOWED_DOMAINS:-github.com,docs.python.org,stackoverflow.com}
+      
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      
+    volumes:
+      # Workspace (safe zone for agent operations)
+      - ./workspace:/home/claude/workspace
+      - ./tmp:/tmp/openclaw-sandbox
+      
+      # Quarantine for malicious files
+      - ./quarantine:/quarantine:ro
+      
+      # Configuration
+      - ./config:/config:ro
+      
+      # Logs
+      - ./logs:/var/log/openclaw
+    
+    networks:
+      - openclaw-isolated
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    
+    # Read-only root filesystem (with exceptions)
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /run
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Egress proxy for network filtering
+  egress-proxy:
+    image: squid:5.7
+    container_name: openclaw-egress-proxy
+    
+    volumes:
+      - ./config/squid.conf:/etc/squid/squid.conf:ro
+      - ./config/blocked-domains.txt:/etc/squid/blocked-domains.txt:ro
+      - ./logs/squid:/var/log/squid
+    
+    networks:
+      - openclaw-isolated
+    
+    ports:
+      - "3128:3128"  # Proxy port
+    
+    restart: unless-stopped
+
+  # Optional: Azure Monitor sidecar for enhanced logging
+  azure-monitor-agent:
+    image: mcr.microsoft.com/azuremonitor/containerinsights/ciprod:latest
+    container_name: openclaw-monitor
+    
+    environment:
+      APPLICATIONINSIGHTS_CONNECTION_STRING: ${APPLICATIONINSIGHTS_CONNECTION_STRING:-}
+    
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./logs:/logs:ro
+    
+    networks:
+      - openclaw-isolated
+    
+    restart: unless-stopped
+    
+    profiles:
+      - monitoring  # Only start with --profile monitoring
+
+networks:
+  openclaw-isolated:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+    # Enable/disable external access based on security posture
+    internal: false  # Set to true for maximum isolation
+
+volumes:
+  workspace:
+    driver: local
+  tmp:
+    driver: local
+  quarantine:
+    driver: local
+  logs:
+    driver: local

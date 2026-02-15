@@ -14,6 +14,8 @@ OpenClaw Shield provides three layers of defense for AI agents:
 
 ## 🏗️ Architecture
 
+![OpenClaw Prompt Shields diagram](openclaw_promptshields_diagram_bw.png)
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    User Request                             │

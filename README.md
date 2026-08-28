@@ -128,8 +128,9 @@ We do not monetise the code. We monetise hosting, enterprise controls, complianc
 
 - Documentation: [docs.promptshields.com](https://docs.promptshields.com); in-repository references are [API reference](docs/api-reference.md), [Purview integration](docs/purview-integration.md), and the [incident response playbook](docs/incident-response.md)
 - Deployment: [DEPLOYMENT.md](DEPLOYMENT.md)
-- Security policy: this repository has no `SECURITY.md`. Report vulnerabilities privately to security@promptshields.com, never via a public issue. The canonical policy is [prompt-shields-sdk/SECURITY.md](https://github.com/Prompt-Shields/prompt-shields-sdk/blob/main/SECURITY.md).
-- Contributing: this repository has no `CONTRIBUTING.md`. Open a pull request against `main`; see [prompt-shields-sdk/CONTRIBUTING.md](https://github.com/Prompt-Shields/prompt-shields-sdk/blob/main/CONTRIBUTING.md) for the workflow we follow.
+- Security policy: [SECURITY.md](SECURITY.md) — report vulnerabilities privately to security@promptshields.com, never via a public issue
+- Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Code of conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 - Related: [Prompt Shields SDK](https://github.com/Prompt-Shields/prompt-shields-sdk), [Azure AI Content Safety](https://azure.microsoft.com/en-gb/products/ai-services/ai-content-safety)
 
 ## Licence

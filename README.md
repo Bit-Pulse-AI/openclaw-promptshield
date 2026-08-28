@@ -11,7 +11,7 @@ A computer-use agent is granted a shell, a filesystem, and outbound network acce
 ## Quickstart
 
 ```bash
-git clone https://github.com/Bit-Pulse-AI/openclaw-promptshield.git && cd openclaw-promptshield
+git clone https://github.com/Prompt-Shields/openclaw-promptshield.git && cd openclaw-promptshield
 python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
 export AZURE_CONTENT_SAFETY_ENDPOINT="https://<your-resource>.cognitiveservices.azure.com/"
 export AZURE_CONTENT_SAFETY_KEY="<your-key>"
@@ -21,6 +21,8 @@ export SHIELD_MODE=monitoring && python3 -c "from openclaw_shield.shields import
 Requires Python 3.9 or later and an Azure AI Content Safety resource. Start in `monitoring` mode, which logs decisions without blocking; switch to `enforcing` only once you have reviewed what it would have blocked. For a container deployment, populate the environment variables listed in `docker-compose.yml` and run `docker compose up -d`.
 
 ## How does it work?
+
+![OpenClaw Agent calls pass through three Prompt Shields layers - input, tool execution, and output - before reaching the outside world](openclaw_promptshields_diagram_bw.png)
 
 **A tool shield is a validator that intercepts a single class of agent action — a shell command, a file operation, a network request — and returns an allow or deny decision with a reason, before the action reaches the operating system.** Four shields wrap the agent at three points on the request path.
 
@@ -126,9 +128,9 @@ We do not monetise the code. We monetise hosting, enterprise controls, complianc
 
 - Documentation: [docs.promptshields.com](https://docs.promptshields.com); in-repository references are [API reference](docs/api-reference.md), [Purview integration](docs/purview-integration.md), and the [incident response playbook](docs/incident-response.md)
 - Deployment: [DEPLOYMENT.md](DEPLOYMENT.md)
-- Security policy: this repository has no `SECURITY.md`. Report vulnerabilities privately to security@promptshields.com, never via a public issue. The canonical policy is [prompt-shields-sdk/SECURITY.md](https://github.com/Bit-Pulse-AI/prompt-shields-sdk/blob/main/SECURITY.md).
-- Contributing: this repository has no `CONTRIBUTING.md`. Open a pull request against `main`; see [prompt-shields-sdk/CONTRIBUTING.md](https://github.com/Bit-Pulse-AI/prompt-shields-sdk/blob/main/CONTRIBUTING.md) for the workflow we follow.
-- Related: [Prompt Shields SDK](https://github.com/Bit-Pulse-AI/prompt-shields-sdk), [Azure AI Content Safety](https://azure.microsoft.com/en-gb/products/ai-services/ai-content-safety)
+- Security policy: this repository has no `SECURITY.md`. Report vulnerabilities privately to security@promptshields.com, never via a public issue. The canonical policy is [prompt-shields-sdk/SECURITY.md](https://github.com/Prompt-Shields/prompt-shields-sdk/blob/main/SECURITY.md).
+- Contributing: this repository has no `CONTRIBUTING.md`. Open a pull request against `main`; see [prompt-shields-sdk/CONTRIBUTING.md](https://github.com/Prompt-Shields/prompt-shields-sdk/blob/main/CONTRIBUTING.md) for the workflow we follow.
+- Related: [Prompt Shields SDK](https://github.com/Prompt-Shields/prompt-shields-sdk), [Azure AI Content Safety](https://azure.microsoft.com/en-gb/products/ai-services/ai-content-safety)
 
 ## Licence
 
